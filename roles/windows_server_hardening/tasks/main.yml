@@ -1,3 +1,12 @@
----
-# Tasks for windows_server_hardening
-# Add your tasks here
+- name: Gather Windows facts
+  ansible.windows.setup:
+  
+- name: Display system information
+  debug:
+    msg: |
+      OS: {{ ansible_os_family }}
+      Product Name: {{ ansible_distribution }}
+      Version: {{ ansible_distribution_version }}
+      Architecture: {{ ansible_architecture }}
+      Domain: {{ ansible_domain | default('WORKGROUP') }}
+      Hostname: {{ ansible_hostname }}
