@@ -78,7 +78,6 @@ winhost.example.com
 ansible_user=Administrator
 ansible_password=MySecurePassword
 ansible_connection=winrm
-ansible_winrm_transport=basic
 ansible_port=5986
 ansible_winrm_server_cert_validation=ignore
 ```
@@ -105,14 +104,78 @@ To connect Ansible to Windows hosts via WinRM, ensure your **Ansible control nod
 > - `libffi-devel` and `python-devel` are **OS packages**, not Python packages.  
 > - These are required mainly on Linux if you need to compile certain Python extensions.  
 > - On Windows or macOS control nodes, you usually just need to install `pyopenssl`, `requests`, and `pywinrm` via `pip`.
+
+---
+## Troubleshooting: Network Profile is Public
+
+**Problem:**  
+When running `winrm quickconfig`, you may see a warning like:  
+
+```
+WinRM is not set up to allow remote access to this machine for management.
+Network connection type is Public.
+```
+
+When the network profile is **Public**, Windows Firewall blocks WinRM ports (5985/5986) by default, and `quickconfig` cannot automatically create the required firewall rules.
+
 ---
 
+**Solution:**  
+
+1. **Check your current network profile:**
+   ```powershell
+   Get-NetConnectionProfile
+   ```
+
+   Example output:
+   ```
+   Name             : Ethernet
+   NetworkCategory  : Public
+   ```
+
+2. **Change the network profile from Public to Private:**
+   ```powershell
+   Set-NetConnectionProfile -InterfaceAlias "Ethernet" -NetworkCategory Private
+   ```
+
+   > Replace `"Ethernet"` with the `InterfaceAlias` shown in your system (e.g., `"Ethernet 2"` or `"Wi-Fi"`).
+
+3. **Verify the change:**
+   ```powershell
+   Get-NetConnectionProfile
+   ```
+   Should now show:
+   ```
+   NetworkCategory  : Private
+   ```
+
+4. **Re-run WinRM configuration:**
+   ```powershell
+   winrm quickconfig -q
+   ```
+
+   This time, WinRM will configure successfully and will add firewall rules for the correct network profile.
+
+---
+
+**Example:**
+Before:
+```
+Name             : Ethernet
+NetworkCategory  : Public
+```
+After:
+```
+Name             : Ethernet
+NetworkCategory  : Private
+```
+Now WinRM should work with Ansible over the selected port.
+
+---
 **Tip:**  
 If you run into authentication issues, make sure:
 - The username and password are correct
 - The firewall allows ports `5985` (HTTP) and `5986` (HTTPS)
 - The script was run under **Administrator** privileges
-
----
-
+  
 ✅ Now your Windows machine is ready to be managed by Ansible.
