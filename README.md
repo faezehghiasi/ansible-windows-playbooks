@@ -36,7 +36,7 @@ $file = "C:/Path/To/ConfigureRemotingForAnsible.ps1"
 powershell.exe -ExecutionPolicy Bypass -File $file -Verbose
 ```
 
----
+<img width="652" height="170" alt="image" src="https://github.com/user-attachments/assets/7933045e-bc5c-4c1d-809e-4f2036ed9578" />
 
 ## 4. Expected Successful Output
 
@@ -53,6 +53,7 @@ VERBOSE: PS Remoting has been successfully configured for Ansible.
 ```
 
 ---
+
 
 ## 5. What This Script Does
 
