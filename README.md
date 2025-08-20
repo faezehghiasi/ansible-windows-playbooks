@@ -82,7 +82,29 @@ ansible_winrm_transport=basic
 ansible_port=5986
 ansible_winrm_server_cert_validation=ignore
 ```
+## Prerequisites (Control Node)
 
+To connect Ansible to Windows hosts via WinRM, ensure your **Ansible control node** (the machine running Ansible) meets the following requirements:
+
+- **Python 3.x** installed  
+- **pip** (Python package manager)  
+- Install the required Python packages:
+  ```bash
+  pip install pyopenssl
+  pip install requests
+  pip install pywinrm
+  ```
+
+- On Linux control nodes, you may also need development libraries for building Python packages (like `pyopenssl` or `cryptography`):
+  | Distribution      | Package Name        |
+  |-------------------|---------------------|
+  | RHEL/CentOS/Fedora| libffi-devel, python-devel |
+  | Debian/Ubuntu     | libffi-dev, python3-dev    |
+
+> **Note:**  
+> - `libffi-devel` and `python-devel` are **OS packages**, not Python packages.  
+> - These are required mainly on Linux if you need to compile certain Python extensions.  
+> - On Windows or macOS control nodes, you usually just need to install `pyopenssl`, `requests`, and `pywinrm` via `pip`.
 ---
 
 **Tip:**  
