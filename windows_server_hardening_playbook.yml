@@ -1,0 +1,5 @@
+---
+- name: Windows_server_hardening playbook
+  hosts: all    
+  roles:
+    - role: windows_server_hardening
