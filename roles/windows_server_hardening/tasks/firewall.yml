@@ -1,0 +1,51 @@
+
+- name: Check current user
+  win_shell: whoami
+  register: current_user
+
+- name: Display current user
+  debug:
+    var: current_user.stdout
+
+- name: Start Windows Firewall service using sc
+  win_shell: |
+    sc config MpsSvc start= auto
+    net start MpsSvc
+  register: service_start
+  failed_when: false
+
+- name: Display service start result
+  debug:
+    var: service_start
+
+- name: Enable Windows Firewall using netsh
+  win_shell: netsh advfirewall set allprofiles state on
+  register: firewall_enable
+
+- name: Display firewall enable result
+  debug:
+    var: firewall_enable
+
+- name: Remove existing RDP rule if present
+  win_shell: netsh advfirewall firewall delete rule name="Block Remote Desktop"
+  failed_when: false
+
+- name: Block Remote Desktop using netsh
+  win_shell: netsh advfirewall firewall add rule name="Block Remote Desktop" dir=in action=block protocol=TCP localport=3389
+  register: rdp_block
+
+- name: Display RDP block result
+  debug:
+    var: rdp_block
+
+- name: Remove existing SMB rule if present
+  win_shell: netsh advfirewall firewall delete rule name="Block SMB Ports"
+  failed_when: false
+
+- name: Block SMB ports using netsh
+  win_shell: netsh advfirewall firewall add rule name="Block SMB Ports" dir=in action=block protocol=TCP localport=135,136,137,138,139,445
+  register: smb_block
+
+- name: Display SMB block result
+  debug:
+    var: smb_block
