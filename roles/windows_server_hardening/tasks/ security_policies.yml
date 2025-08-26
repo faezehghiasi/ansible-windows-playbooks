@@ -1,0 +1,14 @@
+---
+- name: Configure User Rights Assignment
+  win_security_policy:
+    name: SeRemoteInteractiveLogonRight
+    option_value: Administrators
+
+- name: Ensure UAC is enabled
+  win_security_policy:
+    name: EnableLUA
+    option_value: 1
+
+- name: Set time zone to UTC
+  win_timezone:
+    timezone: UTC

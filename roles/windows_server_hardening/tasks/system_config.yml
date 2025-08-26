@@ -1,0 +1,20 @@
+---
+- name: Disable SMBv2 and SMBv3
+  win_regedit:
+    path: HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters
+    name: SMB2
+    value: 0
+    state: present
+
+- name: Disable NetBIOS over TCP/IP
+  win_regedit:
+    path: HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters
+    name: NetbiosOptions
+    value: 2
+    state: present
+
+- name: Configure Windows Defender Antivirus
+  win_service:
+    name: WinDefend
+    state: started
+    start_mode: auto

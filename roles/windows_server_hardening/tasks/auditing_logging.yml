@@ -1,0 +1,15 @@
+---
+- name: Ensure Windows Event Log service is running
+  win_service:
+    name: eventlog
+    state: started
+
+- name: Configure auditing for logon events
+  win_security_policy:
+    name: AuditLogonEvents
+    option_value: Success and Failure
+
+- name: Configure auditing for account management
+  win_security_policy:
+    name: AuditAccountLogonEvents
+    option_value: Success and Failure

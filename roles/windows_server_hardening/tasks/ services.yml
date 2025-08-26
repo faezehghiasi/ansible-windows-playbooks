@@ -1,0 +1,24 @@
+---
+- name: Disable SMBv1
+  win_service:
+    name: "LanmanServer"
+    state: stopped
+    enabled: no
+
+- name: Disable Remote Registry Service
+  win_service:
+    name: "RemoteRegistry"
+    state: stopped
+    enabled: no
+
+- name: Disable Windows Remote Management (WinRM) Service
+  win_service:
+    name: "WinRM"
+    state: stopped
+    enabled: no
+
+- name: Disable Windows Management Instrumentation (WMI)
+  win_service:
+    name: "Winmgmt"
+    state: stopped
+    enabled: no
